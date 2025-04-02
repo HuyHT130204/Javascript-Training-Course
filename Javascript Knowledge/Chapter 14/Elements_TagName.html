@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Elements by Tag Name Exercise</title>
+</head>
+<body>
+  <h1>Heading with a <span>span</span> element.</h1>
+  <p>A paragraph with <span>one</span>, <span>two</span> spans.</p>
+  <p>Another paragraph with <strong>strong</strong> text and a <span>span</span>.</p>
+  <div>A div with <span>multiple</span> <span>spans</span> and a <p>paragraph</p> inside.</div>
+
+  <script>
+    /**
+     * Find all elements with the given tag name that are descendants of the node
+     * @param {Node} node - The starting node to search from
+     * @param {string} tagName - The tag name to search for
+     * @returns {Array} - Array of matching element nodes
+     */
+    function getElementsByTagName(node, tagName) {
+      // Convert tagName to lowercase for case-insensitive comparison
+      tagName = tagName.toLowerCase();
+      
+      // Array to store matching elements
+      let elements = [];
+      
+      // Function to recursively search the node tree
+      function searchNodes(currentNode) {
+        // Check if the current node is an element node (type 1)
+        if (currentNode.nodeType === 1) {
+          // Check if this element matches the tag name
+          if (currentNode.nodeName.toLowerCase() === tagName) {
+            elements.push(currentNode);
+          }
+          
+          // Recursively search all child nodes
+          for (let i = 0; i < currentNode.childNodes.length; i++) {
+            searchNodes(currentNode.childNodes[i]);
+          }
+        }
+      }
+      
+      // Start the recursive search
+      searchNodes(node);
+      
+      return elements;
+    }
+    
+    // Test the function
+    console.log("All span elements:", getElementsByTagName(document.body, "span"));
+    console.log("All p elements:", getElementsByTagName(document.body, "p"));
+    console.log("All div elements:", getElementsByTagName(document.body, "div"));
+    
+    // Compare with the built-in method
+    console.log("Built-in spans:", document.getElementsByTagName("span"));
+    console.log("Built-in paragraphs:", document.getElementsByTagName("p"));
+    
+    // Test with a more specific starting node
+    const div = document.querySelector("div");
+    console.log("Spans inside the div:", getElementsByTagName(div, "span"));
+  </script>
+</body>
+</html>
