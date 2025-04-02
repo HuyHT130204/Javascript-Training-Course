@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hat Circling Around Cat</title>
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
+    
+    #animation-container {
+      position: relative;
+      width: 600px;
+      height: 300px;
+      border: 1px dashed #ccc;
+    }
+    
+    img {
+      position: absolute;
+    }
+    
+    #cat {
+      width: 100px;
+      height: auto;
+    }
+    
+    #hat {
+      width: 60px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="animation-container">
+    <img id="cat" src="https://eloquentjavascript.net/img/cat.png" alt="Cat">
+    <img id="hat" src="https://eloquentjavascript.net/img/hat.png" alt="Hat">
+  </div>
+
+  <script>
+    // Get the elements
+    const cat = document.getElementById("cat");
+    const hat = document.getElementById("hat");
+    const container = document.getElementById("animation-container");
+    
+    // Center point for the cat's elliptical path
+    const centerX = container.offsetWidth / 2 - 50; // Adjusting for cat width
+    const centerY = container.offsetHeight / 2 - 50; // Adjusting for cat height
+    
+    // Cat's ellipse dimensions
+    const catHorizontalRadius = 200;
+    const catVerticalRadius = 50;
+    
+    // Hat's circle radius (around the cat)
+    const hatRadius = 80;
+    
+    // Starting angles
+    let catAngle = 0;
+    let hatAngle = 0;
+    
+    /**
+     * Animation function that updates elements' positions
+     */
+    function animate(time, lastTime) {
+      // Update angles based on time difference
+      if (lastTime != null) {
+        // Cat moves slower
+        catAngle += (time - lastTime) * 0.0005;
+        // Hat moves faster around the cat
+        hatAngle += (time - lastTime) * 0.002;
+      }
+      
+      // Cat position along its elliptical path
+      const catX = centerX + Math.cos(catAngle) * catHorizontalRadius;
+      const catY = centerY + Math.sin(catAngle) * catVerticalRadius;
+      
+      // Update cat position
+      cat.style.left = catX + "px";
+      cat.style.top = catY + "px";
+      
+      // Hat position - circling around the cat
+      const hatX = catX + Math.cos(hatAngle) * hatRadius - 30; // Adjustment for hat size
+      const hatY = catY + Math.sin(hatAngle) * hatRadius - 30; // Adjustment for hat size
+      
+      // Update hat position
+      hat.style.left = hatX + "px";
+      hat.style.top = hatY + "px";
+      
+      // Schedule the next frame
+      requestAnimationFrame(newTime => animate(newTime, time));
+    }
+    
+    // Start the animation
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
