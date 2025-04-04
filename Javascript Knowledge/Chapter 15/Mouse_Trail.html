@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mouse Trail Exercise</title>
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .trail-dot {
+      position: absolute;
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      background-color: #3498db;
+      pointer-events: none; /* Prevent dots from interfering with mouse events */
+      opacity: 0.8;
+      transition: transform 0.1s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // Number of dots in the trail
+    const trailLength = 20;
+    // Array to store the dot elements
+    const dots = [];
+    
+    // Create the dots
+    for (let i = 0; i < trailLength; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'trail-dot';
+      document.body.appendChild(dot);
+      dots.push(dot);
+      
+      // Set an initial position off-screen
+      dot.style.left = '-10px';
+      dot.style.top = '-10px';
+    }
+    
+    // Keep track of the current dot to update
+    let currentDot = 0;
+    
+    // Function to update a dot's position
+    function updateDotPosition(event) {
+      // Get current dot to update
+      const dot = dots[currentDot];
+      
+      // Update dot position
+      dot.style.left = (event.pageX - 5) + 'px'; // Adjust for dot size
+      dot.style.top = (event.pageY - 5) + 'px';  // Adjust for dot size
+      
+      // Add a slight scaling effect for visual interest
+      dot.style.transform = 'scale(1)';
+      setTimeout(() => {
+        dot.style.transform = 'scale(0.5)';
+      }, 100);
+      
+      // Cycle to the next dot
+      currentDot = (currentDot + 1) % trailLength;
+    }
+    
+    // Add event listener for mouse movement
+    window.addEventListener('mousemove', updateDotPosition);
+  </script>
+</body>
+</html>

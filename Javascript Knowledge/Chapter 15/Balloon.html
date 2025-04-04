@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Balloon Exercise</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    
+    #balloon {
+      font-size: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="balloon">🎈</div>
+
+  <script>
+    const balloon = document.getElementById('balloon');
+    let size = 30; // Initial size in pixels
+    const growthFactor = 1.1; // 10% growth
+    const maxSize = 100; // Size at which balloon explodes
+
+    // Prevent default arrow key scrolling
+    window.addEventListener('keydown', event => {
+      if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault();
+      }
+    });
+
+    // Function to handle balloon inflation/deflation
+    function handleBalloon(event) {
+      if (event.key === 'ArrowUp') {
+        // Inflate by 10%
+        size *= growthFactor;
+        balloon.style.fontSize = size + 'px';
+        
+        // Check if balloon should explode
+        if (size > maxSize) {
+          balloon.textContent = '💥';
+          // Remove event handler after explosion
+          window.removeEventListener('keydown', handleBalloon);
+        }
+      } else if (event.key === 'ArrowDown') {
+        // Deflate by approximately 10%
+        size /= growthFactor;
+        balloon.style.fontSize = size + 'px';
+      }
+    }
+
+    // Add event listener
+    window.addEventListener('keydown', handleBalloon);
+  </script>
+</body>
+</html>
