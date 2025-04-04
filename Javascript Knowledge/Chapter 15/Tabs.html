@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabs Exercise</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .tab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    
+    .tab-button {
+      padding: 8px 16px;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      border-radius: 4px 4px 0 0;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .tab-button.active {
+      background-color: #4CAF50;
+      color: white;
+      border-color: #4CAF50;
+    }
+    
+    .tab-panel {
+      border: 1px solid #ccc;
+      border-top: none;
+      padding: 15px;
+      border-radius: 0 0 4px 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tabbed Interface Example</h1>
+  
+  <div id="tab-container">
+    <div data-tabname="First">
+      <h2>First Tab Content</h2>
+      <p>This is the content of the first tab. It contains some text and information that's specific to this tab.</p>
+      <p>You can switch between tabs by clicking the buttons above.</p>
+    </div>
+    
+    <div data-tabname="Second">
+      <h2>Second Tab Content</h2>
+      <p>This is the content of the second tab. It contains different information.</p>
+      <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+      </ul>
+    </div>
+    
+    <div data-tabname="Third">
+      <h2>Third Tab Content</h2>
+      <p>This is the content of the third tab.</p>
+      <p>Each tab can contain completely different content and layout as needed.</p>
+      <button>A button in tab 3</button>
+    </div>
+  </div>
+
+  <script>
+    function asTabs(node) {
+      // Get all child elements that will become tabs
+      const tabs = Array.from(node.children);
+      
+      // Create a container for tab buttons
+      const buttonContainer = document.createElement('div');
+      buttonContainer.className = 'tab-buttons';
+      
+      // Add tab buttons container before the first child
+      node.insertBefore(buttonContainer, node.firstChild);
+      
+      // Add tab-panel class to all tab content divs
+      tabs.forEach(tab => tab.className = 'tab-panel');
+      
+      // Hide all tabs initially except the first one
+      tabs.slice(1).forEach(tab => tab.style.display = 'none');
+      
+      // Create tab buttons
+      tabs.forEach((tab, index) => {
+        // Get tab name from data attribute
+        const tabName = tab.getAttribute('data-tabname');
+        
+        // Create the button
+        const button = document.createElement('button');
+        button.textContent = tabName;
+        button.className = 'tab-button';
+        
+        // Set the first button as active
+        if (index === 0) {
+          button.classList.add('active');
+        }
+        
+        // Add click event to show the corresponding tab
+        button.addEventListener('click', () => {
+          // Hide all tabs
+          tabs.forEach(t => t.style.display = 'none');
+          
+          // Show the selected tab
+          tab.style.display = 'block';
+          
+          // Update active button styling
+          buttonContainer.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          button.classList.add('active');
+        });
+        
+        // Add button to the container
+        buttonContainer.appendChild(button);
+      });
+    }
+
+    // Initialize tabs
+    asTabs(document.getElementById('tab-container'));
+  </script>
+</body>
+</html>
