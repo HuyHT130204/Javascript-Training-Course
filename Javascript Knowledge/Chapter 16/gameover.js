@@ -363,8 +363,3 @@ async function runGame(plans, Display) {
     livesDisplay.textContent = "You've won!";
     alert("You've won!");
 }
-
-// Run the game when the page loads
-window.addEventListener('load', () => {
-    runGame(GAME_LEVELS, DOMDisplay);
-});
