@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Shapes</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 1px solid #333;
+            margin: 10px;
+        }
+        .shape-container {
+            margin-bottom: 20px;
+        }
+        h3 {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Canvas Shapes Exercise</h1>
+    
+    <div class="shape-container">
+        <h3>1. Trapezoid</h3>
+        <canvas id="trapezoid" width="200" height="150"></canvas>
+    </div>
+    
+    <div class="shape-container">
+        <h3>2. Red Diamond</h3>
+        <canvas id="diamond" width="200" height="200"></canvas>
+    </div>
+    
+    <div class="shape-container">
+        <h3>3. Zigzagging Line</h3>
+        <canvas id="zigzag" width="300" height="150"></canvas>
+    </div>
+    
+    <div class="shape-container">
+        <h3>4. Spiral</h3>
+        <canvas id="spiral" width="300" height="300"></canvas>
+    </div>
+    
+    <div class="shape-container">
+        <h3>5. Yellow Star</h3>
+        <canvas id="star" width="300" height="300"></canvas>
+    </div>
+
+    <script>
+        // 1. Trapezoid
+        function drawTrapezoid(ctx, x, y, topWidth, bottomWidth, height) {
+            ctx.beginPath();
+            ctx.moveTo(x - topWidth/2, y);
+            ctx.lineTo(x + topWidth/2, y);
+            ctx.lineTo(x + bottomWidth/2, y + height);
+            ctx.lineTo(x - bottomWidth/2, y + height);
+            ctx.closePath();
+            ctx.fillStyle = "#3498db";
+            ctx.fill();
+            ctx.strokeStyle = "#2980b9";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // 2. Red Diamond (rotated rectangle)
+        function drawDiamond(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(Math.PI / 4); // 45 degrees
+            ctx.beginPath();
+            ctx.rect(-size/2, -size/2, size, size);
+            ctx.fillStyle = "red";
+            ctx.fill();
+            ctx.strokeStyle = "darkred";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        // 3. Zigzagging Line
+        function drawZigzag(ctx, x, y, width, height, segments) {
+            const segmentWidth = width / segments;
+            
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            
+            for (let i = 0; i <= segments; i++) {
+                // For each segment, alternate between top and bottom
+                const yPos = i % 2 === 0 ? y + height : y;
+                ctx.lineTo(x + i * segmentWidth, yPos);
+            }
+            
+            ctx.strokeStyle = "#e74c3c";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        // 4. Spiral
+        function drawSpiral(ctx, x, y, segments, startRadius, spacing) {
+            ctx.beginPath();
+            ctx.moveTo(x + startRadius, y);
+            
+            for (let i = 0; i <= segments; i++) {
+                // Calculate angle based on segment
+                const angle = (i * Math.PI * 2) / 20;
+                // Radius increases with each segment
+                const radius = startRadius + (spacing * i / segments);
+                // Calculate position using trigonometric functions
+                const xPos = x + Math.cos(angle) * radius;
+                const yPos = y + Math.sin(angle) * radius;
+                
+                ctx.lineTo(xPos, yPos);
+            }
+            
+            ctx.strokeStyle = "#9b59b6";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // 5. Yellow Star
+        function drawStar(ctx, x, y, outerRadius, innerRadius, points) {
+            ctx.beginPath();
+            
+            for (let i = 0; i < points * 2; i++) {
+                // Alternate between outer and inner points
+                const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                // Calculate angle for current point
+                const angle = (i * Math.PI) / points;
+                // Calculate position using trigonometric functions
+                const xPos = x + Math.cos(angle) * radius;
+                const yPos = y + Math.sin(angle) * radius;
+                
+                if (i === 0) {
+                    ctx.moveTo(xPos, yPos);
+                } else {
+                    ctx.lineTo(xPos, yPos);
+                }
+            }
+            
+            ctx.closePath();
+            ctx.fillStyle = "gold";
+            ctx.fill();
+            ctx.strokeStyle = "orange";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // Initialize all drawings
+        window.onload = function() {
+            // 1. Trapezoid
+            const trapCtx = document.getElementById("trapezoid").getContext("2d");
+            drawTrapezoid(trapCtx, 100, 30, 80, 160, 90);
+            
+            // 2. Red Diamond
+            const diamondCtx = document.getElementById("diamond").getContext("2d");
+            drawDiamond(diamondCtx, 100, 100, 100);
+            
+            // 3. Zigzag Line
+            const zigzagCtx = document.getElementById("zigzag").getContext("2d");
+            drawZigzag(zigzagCtx, 20, 30, 260, 90, 10);
+            
+            // 4. Spiral
+            const spiralCtx = document.getElementById("spiral").getContext("2d");
+            drawSpiral(spiralCtx, 150, 150, 100, 10, 140);
+            
+            // 5. Yellow Star
+            const starCtx = document.getElementById("star").getContext("2d");
+            drawStar(starCtx, 150, 150, 120, 50, 5);
+        };
+    </script>
+</body>
+</html>

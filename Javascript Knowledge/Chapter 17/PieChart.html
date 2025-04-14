@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pie Chart with Labels</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 1px solid #333;
+            margin: 20px;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        .description {
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Customer Satisfaction Survey</h1>
+    <div class="description">
+        A pie chart showing the results of a customer satisfaction survey with labels
+        positioned automatically around each slice.
+    </div>
+    <canvas width="600" height="500"></canvas>
+    
+    <script>
+        // Sample data
+        const results = [
+            {name: "Satisfied", count: 1043, color: "lightblue"},
+            {name: "Neutral", count: 563, color: "lightgreen"},
+            {name: "Unsatisfied", count: 510, color: "pink"},
+            {name: "No comment", count: 175, color: "silver"}
+        ];
+
+        // Get the canvas and context
+        const canvas = document.querySelector("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // Constants for pie chart dimensions
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2 - 30; // Move slightly up to make room for title
+        const radius = Math.min(centerX, centerY) - 50; // Make room for labels
+        const labelDistance = radius * 1.2; // How far from center the labels appear
+        
+        function drawPieChart(data, ctx, cx, cy, radius) {
+            // Calculate total for percentages
+            const total = data.reduce((sum, {count}) => sum + count, 0);
+            
+            // Start at the top (negative y is up)
+            let currentAngle = -0.5 * Math.PI;
+            
+            // Draw title
+            ctx.font = "bold 24px Arial";
+            ctx.fillStyle = "black";
+            ctx.textAlign = "center";
+            ctx.fillText("Customer Satisfaction Results", cx, 40);
+            
+            // Draw each slice
+            for (let result of data) {
+                // Calculate slice angle
+                const sliceAngle = (result.count / total) * 2 * Math.PI;
+                const middleAngle = currentAngle + sliceAngle / 2;
+                
+                // Draw slice
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.lineTo(cx, cy);
+                ctx.fillStyle = result.color;
+                ctx.fill();
+                
+                // Draw slice border
+                ctx.strokeStyle = "white"; 
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // Calculate percentage
+                const percentage = Math.round((result.count / total) * 100);
+                
+                // Draw label
+                drawLabel(ctx, cx, cy, middleAngle, labelDistance, result.name, percentage);
+                
+                // Move to next slice
+                currentAngle += sliceAngle;
+            }
+            
+            // Draw a legend
+            drawLegend(ctx, data, cx, cy + radius + 80, total);
+        }
+        
+        function drawLabel(ctx, cx, cy, angle, distance, text, percentage) {
+            // Calculate label position
+            const x = cx + Math.cos(angle) * distance;
+            const y = cy + Math.sin(angle) * distance;
+            
+            // Set text alignment based on position relative to the center
+            // This ensures text flows away from the pie in all directions
+            if (x < cx) {
+                ctx.textAlign = "right";
+            } else {
+                ctx.textAlign = "left";
+            }
+            
+            // Draw label background for better readability
+            const textMeasure = ctx.measureText(text + ": " + percentage + "%");
+            const padding = 4;
+            ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.fillRect(
+                x - (ctx.textAlign === "right" ? textMeasure.width + padding : 0) - padding,
+                y - 12 - padding,
+                textMeasure.width + padding * 2,
+                24 + padding * 2
+            );
+            
+            // Draw label text
+            ctx.font = "14px Arial";
+            ctx.fillStyle = "black";
+            ctx.textBaseline = "middle";
+            ctx.fillText(`${text}: ${percentage}%`, x, y);
+            
+            // Draw connecting line from pie to label
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+            ctx.lineTo(x - (ctx.textAlign === "right" ? -10 : 10), y);
+            ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        
+        function drawLegend(ctx, data, x, y, total) {
+            const itemHeight = 25;
+            const boxSize = 15;
+            const spacing = 20;
+            
+            ctx.font = "16px Arial";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "middle";
+            
+            // Draw legend title
+            ctx.fillStyle = "black";
+            ctx.fillText("Legend:", x - 150, y - itemHeight);
+            
+            // Draw legend items
+            data.forEach((item, index) => {
+                const itemY = y + index * itemHeight;
+                
+                // Draw color box
+                ctx.fillStyle = item.color;
+                ctx.fillRect(x - 150, itemY - boxSize/2, boxSize, boxSize);
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(x - 150, itemY - boxSize/2, boxSize, boxSize);
+                
+                // Draw label
+                ctx.fillStyle = "black";
+                ctx.fillText(
+                    `${item.name}: ${item.count} (${Math.round((item.count / total) * 100)}%)`,
+                    x - 150 + boxSize + spacing,
+                    itemY
+                );
+            });
+        }
+        
+        // Draw the pie chart
+        drawPieChart(results, ctx, centerX, centerY, radius);
+    </script>
+</body>
+</html>
