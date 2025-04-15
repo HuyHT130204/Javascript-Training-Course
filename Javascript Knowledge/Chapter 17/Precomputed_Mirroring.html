@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precomputed Mirroring</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        #explanation {
+            max-width: 600px;
+            margin: 20px;
+        }
+        #canvasContainer {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 1px solid #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Precomputed Mirroring</h1>
+    
+    <div id="explanation">
+        <p>This demonstrates how to avoid using transformations for mirroring sprites during animation by pre-computing mirrored versions of the sprites.</p>
+        <p>The top animation uses <code>scale(-1, 1)</code> transformation on each frame, while the bottom one uses a pre-mirrored image.</p>
+    </div>
+    
+    <div id="canvasContainer">
+        <div>
+            <h3>With Transformation (Slower)</h3>
+            <canvas id="transformCanvas" width="300" height="120"></canvas>
+        </div>
+        <div>
+            <h3>With Precomputed Mirror (Faster)</h3>
+            <canvas id="precomputedCanvas" width="300" height="120"></canvas>
+        </div>
+    </div>
+    
+    <button id="toggleButton">Start Animation</button>
+    
+    <script>
+        // Animation variables
+        let animationRunning = false;
+        let animationId = null;
+        const spriteWidth = 24;
+        const spriteHeight = 30;
+        const scale = 2;
+        
+        // Create the sprite image
+        const spriteImage = document.createElement("img");
+        spriteImage.src = "https://eloquentjavascript.net/img/player.png";
+        
+        // Create a mirrored version of the sprite
+        const mirroredSprite = document.createElement("canvas");
+        mirroredSprite.width = 192; // Same width as the original sprite image (8 frames * 24px)
+        mirroredSprite.height = 30; // Same height as the original sprite image
+        
+        // Toggle button
+        const toggleButton = document.getElementById("toggleButton");
+        toggleButton.addEventListener("click", () => {
+            if (animationRunning) {
+                stopAnimation();
+                toggleButton.textContent = "Start Animation";
+            } else {
+                startAnimation();
+                toggleButton.textContent = "Stop Animation";
+            }
+        });
+        
+        // Wait for the sprite image to load
+        spriteImage.onload = function() {
+            // Precompute the mirrored version of all sprites
+            const ctx = mirroredSprite.getContext("2d");
+            
+            // First, flip the context horizontally
+            ctx.scale(-1, 1);
+            ctx.translate(-mirroredSprite.width, 0);
+            
+            // Then draw the original image (this will be mirrored)
+            ctx.drawImage(spriteImage, 0, 0);
+            
+            // Initialize canvases
+            initializeCanvases();
+        };
+        
+        function initializeCanvases() {
+            // Get the canvases and their contexts
+            const transformCanvas = document.getElementById("transformCanvas");
+            const precomputedCanvas = document.getElementById("precomputedCanvas");
+            
+            const transformCtx = transformCanvas.getContext("2d");
+            const precomputedCtx = precomputedCanvas.getContext("2d");
+            
+            // Clear both canvases
+            transformCtx.fillStyle = "#f0f0f0";
+            transformCtx.fillRect(0, 0, transformCanvas.width, transformCanvas.height);
+            
+            precomputedCtx.fillStyle = "#f0f0f0";
+            precomputedCtx.fillRect(0, 0, precomputedCanvas.width, precomputedCanvas.height);
+            
+            // Initial sprite drawing
+            drawSprite(transformCtx, 20, 60, 0);
+            drawPrecomputedSprite(precomputedCtx, 20, 60, 0);
+        }
+        
+        function startAnimation() {
+            if (animationRunning) return;
+            
+            animationRunning = true;
+            let frameCount = 0;
+            let x1 = 20; // starting position for transform canvas
+            let x2 = 20; // starting position for precomputed canvas
+            let direction1 = 1; // 1 for right, -1 for left
+            let direction2 = 1; // 1 for right, -1 for left
+            
+            function animate() {
+                const transformCanvas = document.getElementById("transformCanvas");
+                const precomputedCanvas = document.getElementById("precomputedCanvas");
+                
+                const transformCtx = transformCanvas.getContext("2d");
+                const precomputedCtx = precomputedCanvas.getContext("2d");
+                
+                // Clear both canvases
+                transformCtx.fillStyle = "#f0f0f0";
+                transformCtx.fillRect(0, 0, transformCanvas.width, transformCanvas.height);
+                
+                precomputedCtx.fillStyle = "#f0f0f0";
+                precomputedCtx.fillRect(0, 0, precomputedCanvas.width, precomputedCanvas.height);
+                
+                // Update positions
+                x1 += direction1 * 2;
+                x2 += direction2 * 2;
+                
+                // Check boundaries and change direction if needed
+                if (x1 > transformCanvas.width - spriteWidth * scale || x1 < 10) {
+                    direction1 *= -1;
+                }
+                
+                if (x2 > precomputedCanvas.width - spriteWidth * scale || x2 < 10) {
+                    direction2 *= -1;
+                }
+                
+                // Draw with appropriate methods
+                frameCount = (frameCount + 1) % 8;
+                
+                // For the top canvas, use transformation
+                if (direction1 > 0) {
+                    // Moving right, no flip needed
+                    drawSprite(transformCtx, x1, 60, frameCount);
+                } else {
+                    // Moving left, use flip transformation
+                    drawFlippedSprite(transformCtx, x1, 60, frameCount);
+                }
+                
+                // For the bottom canvas, use precomputed mirrored sprites
+                if (direction2 > 0) {
+                    // Moving right, use original sprite
+                    drawPrecomputedSprite(precomputedCtx, x2, 60, frameCount);
+                } else {
+                    // Moving left, use mirrored sprite
+                    drawMirroredSprite(precomputedCtx, x2, 60, frameCount);
+                }
+                
+                // Continue the animation if still running
+                if (animationRunning) {
+                    animationId = requestAnimationFrame(animate);
+                }
+            }
+            
+            animationId = requestAnimationFrame(animate);
+        }
+        
+        function stopAnimation() {
+            if (!animationRunning) return;
+            
+            animationRunning = false;
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+        
+        function drawSprite(ctx, x, y, frameIndex) {
+            ctx.drawImage(
+                spriteImage,                      // source image
+                frameIndex * spriteWidth, 0,      // source x, y
+                spriteWidth, spriteHeight,        // source width, height
+                x, y - spriteHeight * scale,      // dest x, y
+                spriteWidth * scale, spriteHeight * scale  // dest width, height
+            );
+        }
+        
+        function drawFlippedSprite(ctx, x, y, frameIndex) {
+            ctx.save();
+            // Flip horizontally around the center of the sprite
+            ctx.translate(x + spriteWidth * scale / 2, 0);
+            ctx.scale(-1, 1);
+            ctx.translate(-(x + spriteWidth * scale / 2), 0);
+            
+            // Draw the sprite
+            drawSprite(ctx, x, y, frameIndex);
+            
+            ctx.restore();
+        }
+        
+        function drawPrecomputedSprite(ctx, x, y, frameIndex) {
+            ctx.drawImage(
+                spriteImage,                      // source image
+                frameIndex * spriteWidth, 0,      // source x, y
+                spriteWidth, spriteHeight,        // source width, height
+                x, y - spriteHeight * scale,      // dest x, y
+                spriteWidth * scale, spriteHeight * scale  // dest width, height
+            );
+        }
+        
+        function drawMirroredSprite(ctx, x, y, frameIndex) {
+            ctx.drawImage(
+                mirroredSprite,                   // precomputed mirrored image
+                mirroredSprite.width - (frameIndex + 1) * spriteWidth, 0,  // source x, y (reversed)
+                spriteWidth, spriteHeight,        // source width, height
+                x, y - spriteHeight * scale,      // dest x, y
+                spriteWidth * scale, spriteHeight * scale  // dest width, height
+            );
+        }
+    </script>
+</body>
+</html>
