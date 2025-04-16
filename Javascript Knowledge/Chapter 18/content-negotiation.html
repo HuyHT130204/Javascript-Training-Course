@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Negotiation Exercise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        button {
+            padding: 8px 16px;
+            margin: 5px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+        .response-container {
+            margin-top: 20px;
+        }
+        .status {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Content Negotiation Exercise</h1>
+    <p>
+        Fetch the resource at https://eloquentjavascript.net/author with different 
+        Accept headers to get different content formats.
+    </p>
+    
+    <div>
+        <button id="fetchText">Fetch as Plain Text</button>
+        <button id="fetchHTML">Fetch as HTML</button>
+        <button id="fetchJSON">Fetch as JSON</button>
+        <button id="fetchUnicorns">Fetch as Rainbows+Unicorns</button>
+    </div>
+    
+    <div class="response-container">
+        <div class="status" id="status"></div>
+        <pre id="content"></pre>
+    </div>
+
+    <script>
+        // URL of the resource
+        const url = 'https://eloquentjavascript.net/author';
+        
+        // Display function - updates UI with response details
+        function displayResponse(response, content) {
+            document.getElementById('status').textContent = 
+                `Status: ${response.status} ${response.statusText}`;
+            
+            document.getElementById('content').textContent = content;
+        }
+        
+        // Generic fetch function with Accept header
+        async function fetchWithAccept(mediaType) {
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Accept': mediaType
+                    }
+                });
+                
+                // Read the response text
+                const content = await response.text();
+                
+                // Display results
+                displayResponse(response, content);
+            } catch (error) {
+                document.getElementById('status').textContent = 'Error';
+                document.getElementById('content').textContent = error.message;
+            }
+        }
+        
+        // Event listeners for buttons
+        document.getElementById('fetchText').addEventListener('click', () => {
+            fetchWithAccept('text/plain');
+        });
+        
+        document.getElementById('fetchHTML').addEventListener('click', () => {
+            fetchWithAccept('text/html');
+        });
+        
+        document.getElementById('fetchJSON').addEventListener('click', () => {
+            fetchWithAccept('application/json');
+        });
+        
+        document.getElementById('fetchUnicorns').addEventListener('click', () => {
+            fetchWithAccept('application/rainbows+unicorns');
+        });
+    </script>
+</body>
+</html>
