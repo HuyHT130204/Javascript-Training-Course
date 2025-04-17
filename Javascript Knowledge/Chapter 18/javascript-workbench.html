@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Workbench</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            align-self: flex-start;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            border: 1px solid #ddd;
+            padding: 15px;
+            min-height: 100px;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .error {
+            color: #d32f2f;
+        }
+        .success {
+            color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript Workbench</h1>
+    <p>Enter JavaScript code below and run it to see the result.</p>
+    
+    <div class="container">
+        <textarea id="code" placeholder="// Enter your JavaScript code here
+// Example:
+function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n-1) + fibonacci(n-2);
+}
+return fibonacci(10);"></textarea>
+        
+        <button id="runButton">Run Code</button>
+        
+        <div>
+            <h3>Output:</h3>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        const codeTextarea = document.getElementById('code');
+        const runButton = document.getElementById('runButton');
+        const output = document.getElementById('output');
+        
+        // Function to execute the JavaScript code
+        function executeCode() {
+            const code = codeTextarea.value;
+            output.textContent = ''; // Clear previous output
+            output.className = ''; // Reset class
+            
+            try {
+                // Create a function from the code and execute it
+                const executeFunction = new Function(code);
+                const result = executeFunction();
+                
+                // Display the result
+                output.textContent = typeof result === 'undefined' 
+                    ? 'undefined' 
+                    : formatOutput(result);
+                output.className = 'success';
+            } catch (error) {
+                // Handle errors
+                output.textContent = `Error: ${error.message}`;
+                output.className = 'error';
+            }
+        }
+        
+        // Function to format the output in a readable way
+        function formatOutput(result) {
+            if (result === null) return 'null';
+            
+            if (typeof result === 'object') {
+                try {
+                    return JSON.stringify(result, null, 2);
+                } catch (e) {
+                    return String(result);
+                }
+            }
+            
+            return String(result);
+        }
+        
+        // Event listener for the run button
+        runButton.addEventListener('click', executeCode);
+        
+        // Allow running code with Ctrl+Enter
+        codeTextarea.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.key === 'Enter') {
+                executeCode();
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>
