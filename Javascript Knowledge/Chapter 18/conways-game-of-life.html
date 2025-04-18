@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conway's Game of Life</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-gap: 1px;
+            background-color: #ddd;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .cell {
+            width: 15px;
+            height: 15px;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cell input[type="checkbox"] {
+            margin: 0;
+            width: 12px;
+            height: 12px;
+            cursor: pointer;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .size-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .size-input input {
+            width: 60px;
+            padding: 5px;
+        }
+        .stat {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Conway's Game of Life</h1>
+    
+    <div class="game-container">
+        <div class="size-input">
+            <label for="grid-size">Grid Size:</label>
+            <input type="number" id="grid-size" min="5" max="50" value="20">
+            <button id="resize-btn">Resize</button>
+        </div>
+        
+        <div class="controls">
+            <button id="next-gen-btn">Next Generation</button>
+            <button id="start-btn">Start</button>
+            <button id="stop-btn" disabled>Stop</button>
+            <button id="clear-btn">Clear</button>
+            <button id="random-btn">Random</button>
+        </div>
+        
+        <div id="grid" class="grid"></div>
+        
+        <div class="stat">
+            Generation: <span id="generation-count">0</span> | 
+            Living cells: <span id="living-count">0</span>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let gridSize = 20;
+        let grid = [];
+        let isRunning = false;
+        let intervalId = null;
+        let generation = 0;
+        
+        // DOM elements
+        const gridElement = document.getElementById('grid');
+        const nextGenBtn = document.getElementById('next-gen-btn');
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const randomBtn = document.getElementById('random-btn');
+        const resizeBtn = document.getElementById('resize-btn');
+        const gridSizeInput = document.getElementById('grid-size');
+        const genCountElement = document.getElementById('generation-count');
+        const livingCountElement = document.getElementById('living-count');
+        
+        // Initialize the grid
+        function initializeGrid(size) {
+            gridSize = size;
+            grid = Array(size).fill().map(() => Array(size).fill(false));
+            generation = 0;
+            updateGenerationCount();
+            
+            // Configure grid CSS
+            gridElement.style.gridTemplateColumns = `repeat(${size}, 16px)`;
+            gridElement.style.gridTemplateRows = `repeat(${size}, 16px)`;
+            
+            // Clear existing grid
+            gridElement.innerHTML = '';
+            
+            // Create cells with checkboxes
+            for (let y = 0; y < size; y++) {
+                for (let x = 0; x < size; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.dataset.x = x;
+                    checkbox.dataset.y = y;
+                    
+                    checkbox.addEventListener('change', function() {
+                        const x = parseInt(this.dataset.x);
+                        const y = parseInt(this.dataset.y);
+                        grid[y][x] = this.checked;
+                        updateLivingCount();
+                    });
+                    
+                    cell.appendChild(checkbox);
+                    gridElement.appendChild(cell);
+                }
+            }
+            
+            updateLivingCount();
+        }
+        
+        // Update checkbox states to match grid data
+        function updateGridDisplay() {
+            const checkboxes = gridElement.querySelectorAll('input[type="checkbox"]');
+            
+            checkboxes.forEach(checkbox => {
+                const x = parseInt(checkbox.dataset.x);
+                const y = parseInt(checkbox.dataset.y);
+                checkbox.checked = grid[y][x];
+            });
+            
+            updateLivingCount();
+        }
+        
+        // Calculate the next generation based on Conway's rules
+        function nextGeneration() {
+            // Create a copy of the current grid
+            const newGrid = grid.map(row => [...row]);
+            
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    const isAlive = grid[y][x];
+                    const neighbors = countNeighbors(x, y);
+                    
+                    // Apply Conway's rules
+                    if (isAlive && (neighbors < 2 || neighbors > 3)) {
+                        // Die due to underpopulation or overpopulation
+                        newGrid[y][x] = false;
+                    } else if (!isAlive && neighbors === 3) {
+                        // Become alive due to reproduction
+                        newGrid[y][x] = true;
+                    }
+                    // All other cells maintain their state
+                }
+            }
+            
+            // Replace the current grid with the new one
+            grid = newGrid;
+            generation++;
+            updateGenerationCount();
+            updateGridDisplay();
+        }
+        
+        // Count living neighbors around a cell
+        function countNeighbors(x, y) {
+            let count = 0;
+            
+            // Check all 8 surrounding cells
+            for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+                    // Skip the cell itself
+                    if (dx === 0 && dy === 0) continue;
+                    
+                    // Calculate neighbor coordinates with wrap-around
+                    const nx = (x + dx + gridSize) % gridSize;
+                    const ny = (y + dy + gridSize) % gridSize;
+                    
+                    if (grid[ny][nx]) count++;
+                }
+            }
+            
+            return count;
+        }
+        
+        // Fill the grid with random values
+        function randomizeGrid() {
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    grid[y][x] = Math.random() > 0.7;
+                }
+            }
+            
+            updateGridDisplay();
+        }
+        
+        // Clear the grid
+        function clearGrid() {
+            for (let y = 0; y < gridSize; y++) {
+                for (let x = 0; x < gridSize; x++) {
+                    grid[y][x] = false;
+                }
+            }
+            
+            generation = 0;
+            updateGenerationCount();
+            updateGridDisplay();
+        }
+        
+        // Start automatic generation updates
+        function startGame() {
+            if (isRunning) return;
+            
+            isRunning = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            intervalId = setInterval(() => {
+                nextGeneration();
+            }, 200);
+        }
+        
+        // Stop automatic generation updates
+        function stopGame() {
+            if (!isRunning) return;
+            
+            isRunning = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            clearInterval(intervalId);
+        }
+        
+        // Resize the grid
+        function resizeGrid() {
+            const newSize = parseInt(gridSizeInput.value);
+            
+            if (newSize >= 5 && newSize <= 50) {
+                stopGame();
+                initializeGrid(newSize);
+            } else {
+                alert('Grid size must be between 5 and 50');
+                gridSizeInput.value = gridSize;
+            }
+        }
+        
+        // Update the generation counter
+        function updateGenerationCount() {
+            genCountElement.textContent = generation;
+        }
+        
+        // Update the living cells counter
+        function updateLivingCount() {
+            const livingCells = grid.flat().filter(cell => cell).length;
+            livingCountElement.textContent = livingCells;
+        }
+        
+        // Event listeners
+        nextGenBtn.addEventListener('click', nextGeneration);
+        startBtn.addEventListener('click', startGame);
+        stopBtn.addEventListener('click', stopGame);
+        clearBtn.addEventListener('click', clearGrid);
+        randomBtn.addEventListener('click', randomizeGrid);
+        resizeBtn.addEventListener('click', resizeGrid);
+        
+        // Initialize the game
+        initializeGrid(gridSize);
+        randomizeGrid();
+    </script>
+</body>
+</html>
