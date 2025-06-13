@@ -1,0 +1,27 @@
+{
+  "name": "ecommerce-vanilla-js",
+  "version": "1.0.0",
+  "description": "E-commerce website built with Vanilla JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "start": "lite-server",
+    "server": "json-server --watch db.json --port 3001",
+    "dev": "concurrently \"npm run server\" \"npm run start\"",
+    "sass": "sass --watch src/scss:dist/css"
+  },
+  "keywords": [
+    "ecommerce",
+    "vanilla-js",
+    "scss"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-server": "^0.17.4"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "lite-server": "^2.6.1",
+    "sass": "^1.71.1"
+  }
+}
