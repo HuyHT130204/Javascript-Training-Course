@@ -1,0 +1,260 @@
+// Media Queries
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == tablet {
+    @media (min-width: 768px) and (max-width: 1023.98px) { @content; }
+  }
+  @else if $breakpoint == desktop {
+    @media (min-width: 1024px) { @content; }
+  }
+  @else if $breakpoint == huge {
+    @media (min-width: 1440px) { @content; }
+  }
+}
+
+// Header Responsive
+@mixin header-tablet {
+  @media (min-width: 768px) and (max-width: 1023.98px) {
+    .header-top {
+      font-size: 12px !important;
+      min-height: 40px !important;
+      .header-top__content {
+        padding: 0 8px !important;
+      }
+      .header-top__lang {
+        right: 8px !important;
+        font-size: 12px !important;
+      }
+      .header-top__promo {
+        span, .shop-now {
+          font-size: 12px !important;
+        }
+      }
+    }
+    .header-main {
+      .header-main__container {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 8px !important;
+        height: 48px !important;
+        max-width: 100% !important;
+      }
+      .header-logo {
+        font-size: 18px !important;
+        margin-right: 32px !important;
+      }
+      .header-nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        a {
+          font-size: 14px !important;
+        }
+      }
+      .header-search {
+        margin-left: 16px !important;
+        width: 140px !important;
+        input {
+          width: 90px !important;
+          font-size: 12px !important;
+        }
+      }
+      .header-icons {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        margin-left: 8px !important;
+        a {
+          font-size: 16px !important;
+          svg {
+            width: 18px !important;
+            height: 18px !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Header Desktop Responsive
+@mixin header-desktop {
+  // Desktop vừa (1024px - 1199.98px)
+  @media (min-width: 1024px) and (max-width: 1199.98px) {
+    .header-top {
+      font-size: 14px !important;
+      min-height: 48px !important;
+      .header-top__content {
+        padding: 0 16px !important;
+        max-width: 100% !important;
+      }
+      .header-top__lang {
+        right: 16px !important;
+        font-size: 14px !important;
+      }
+      .header-top__promo {
+        span, .shop-now {
+          font-size: 14px !important;
+        }
+      }
+    }
+    .header-main {
+      .header-main__container {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 16px !important;
+        height: 56px !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+      }
+      .header-logo {
+        font-size: 22px !important;
+        margin-right: 60px !important;
+      }
+      .header-nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 28px !important;
+        a {
+          font-size: 15px !important;
+        }
+      }
+      .header-search {
+        margin-left: 32px !important;
+        width: 180px !important;
+        input {
+          width: 120px !important;
+          font-size: 12px !important;
+        }
+      }
+      .header-icons {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        margin-left: 0 !important;
+        a {
+          font-size: 18px !important;
+          svg {
+            width: 18px !important;
+            height: 18px !important;
+          }
+        }
+      }
+    }
+  }
+  // Desktop lớn (>=1200px)
+  @media (min-width: 1200px) {
+    .header-top {
+      font-size: 14px !important;
+      min-height: 48px !important;
+      .header-top__content {
+        padding: 0 24px !important;
+        max-width: $container-max-width !important;
+      }
+      .header-top__lang {
+        right: 24px !important;
+        font-size: 14px !important;
+      }
+      .header-top__promo {
+        span, .shop-now {
+          font-size: 14px !important;
+        }
+      }
+    }
+    .header-main {
+      .header-main__container {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 24px !important;
+        height: 64px !important;
+        max-width: $container-max-width !important;
+        margin: 0 auto !important;
+      }
+      .header-logo {
+        font-size: 24px !important;
+        margin-right: 145px !important;
+      }
+      .header-nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 48px !important;
+        a {
+          font-size: 16px !important;
+        }
+      }
+      .header-search {
+        margin-left: 110px !important;
+        width: 243px !important;
+        input {
+          width: 211px !important;
+          font-size: 12px !important;
+        }
+      }
+      .header-icons {
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        margin-left: 0 !important;
+        a {
+          font-size: 20px !important;
+          svg {
+            width: 18px !important;
+            height: 18px !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Flexbox
+@mixin flex($direction: row, $justify: flex-start, $align: stretch) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+// Grid
+@mixin grid($columns: 1, $gap: $spacing-md) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+// Container
+@mixin container {
+  width: 100%;
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 0 $container-padding;
+}
+
+// Typography
+@mixin heading($size, $weight: bold) {
+  font-size: $size;
+  font-weight: $weight;
+  line-height: 1.2;
+  margin-bottom: $spacing-md;
+}
+
+// Buttons
+@mixin button($bg-color: $primary-color, $text-color: white) {
+  background-color: $bg-color;
+  color: $text-color;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: $transition-base;
+  
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+// Transitions
+@mixin transition($property: all) {
+  transition: $property $transition-base;
+} 
