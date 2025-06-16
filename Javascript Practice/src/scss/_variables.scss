@@ -1,0 +1,55 @@
+// Colors
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$warning-color: #ffc107;
+$info-color: #17a2b8;
+$light-color: #f8f9fa;
+$dark-color: #343a40;
+
+// Header Colors
+$header-top-bg: #000000;
+$header-top-text: #ffffff;
+$header-top-lang: #eaeaea;
+$header-main-bg: #ffffff;
+$header-main-border: #eaeaea;
+$header-logo-color: #000000;
+$header-nav-color: #000000;
+$header-nav-hover: #007bff;
+$header-search-bg: #f5f5f5;
+$header-search-border: #eaeaea;
+$header-search-text: #343a40;
+$header-search-placeholder: #343a40;
+
+// Typography
+$font-family-base: 'Poppins', sans-serif;
+$font-family-logo: 'Inter', sans-serif;
+$font-size-base: 16px;
+$line-height-base: 1.5;
+
+// Spacing
+$spacing-unit: 8px;
+$spacing-xs: $spacing-unit;
+$spacing-sm: $spacing-unit * 2;
+$spacing-md: $spacing-unit * 3;
+$spacing-lg: $spacing-unit * 4;
+$spacing-xl: $spacing-unit * 5;
+
+// Breakpoints
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-xxl: 1400px;
+
+// Container
+$container-max-width: 1170px;
+$container-padding: $spacing-md;
+
+// Border
+$border-radius: 4px;
+$border-color: #dee2e6;
+
+// Transitions
+$transition-base: all 0.3s ease-in-out; 
