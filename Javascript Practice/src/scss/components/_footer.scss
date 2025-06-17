@@ -1,0 +1,231 @@
+.footer {
+  background: $footer-bg;
+  color: $footer-text;
+  width: 100%;
+  padding: 56px 0 0 0;
+  font-family: $font-family-base;
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: $container-max-width;
+    margin: 0 auto;
+    padding: 0 24px;
+    gap: 32px;
+  }
+  &__col {
+    margin-bottom: 32px;
+    // Cột Exclusive
+    &:first-child {
+      min-width: 217px;
+      max-width: 217px;
+      flex: 0 0 217px;
+    }
+    // Cột Support
+    &:nth-child(2) {
+      min-width: 175px;
+      max-width: 175px;
+      flex: 0 0 175px;
+    }
+    // Cột Account
+    &:nth-child(3) {
+      min-width: 123px;
+      max-width: 123px;
+      flex: 0 0 123px;
+    }
+    // Cột Quick Link
+    &:nth-child(4) {
+      min-width: 109px;
+      max-width: 109px;
+      flex: 0 0 109px;
+    }
+    // Cột Download App
+    &:last-child {
+      min-width: 198px;
+      max-width: 198px;
+      flex: 0 0 198px;
+    }
+  }
+  &__logo {
+    font-family: $font-family-logo;
+    font-size: $footer-logo-size;
+    font-weight: $footer-logo-weight;
+    line-height: $footer-logo-line-height;
+    letter-spacing: $footer-logo-letter-spacing;
+    margin-bottom: 24px;
+  }
+  &__title {
+    font-family: $font-family-base;
+    font-size: $footer-title-size;
+    font-weight: $footer-title-weight;
+    line-height: $footer-title-line-height;
+    margin-bottom: 16px;
+  }
+  &__desc {
+    font-size: $footer-desc-size;
+    font-weight: $footer-desc-weight;
+    line-height: $footer-desc-line-height;
+    margin-bottom: 8px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+  // Xóa margin-bottom cho dòng cuối cùng trong mỗi cột
+  &__col .footer__desc:last-child {
+    margin-bottom: 0;
+  }
+  &__desc-small {
+    font-size: $footer-desc-small-size;
+    font-weight: $footer-desc-small-weight;
+    line-height: $footer-desc-small-line-height;
+    margin-bottom: 8px;
+    color: $footer-placeholder;
+  }
+  &__form {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid $footer-text;
+    border-radius: $border-radius;
+    height: 48px;
+    width: 100%;
+    max-width: 217px;
+    margin: 16px 0 0 0;
+    padding: 0 0 0 16px;
+    background: transparent;
+    input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: $footer-placeholder;
+      font-size: 16px;
+      font-family: $font-family-base;
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 100%;
+      &::placeholder {
+        color: $footer-text;
+        opacity: 0.7;
+      }
+    }
+    button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      svg {
+        display: block;
+        margin: auto;
+      }
+    }
+  }
+  &__socials {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $footer-text;
+      transition: color 0.2s;
+      &:hover {
+        color: $primary-color;
+        svg path {
+          stroke: $primary-color;
+          fill: $primary-color;
+        }
+      }
+    }
+  }
+  &__copyright {
+    width: 100%;
+    border-top: 1px solid $footer-border;
+    text-align: center;
+    font-size: 14px;
+    color: $footer-text;
+    opacity: 0.5;
+    padding: 24px 0 24px 0;
+    margin-top: 24px;
+  }
+}
+
+.footer__col:first-child .footer__logo {
+  margin-bottom: 24px;
+}
+.footer__col:first-child .footer__title {
+  margin-bottom: 24px;
+}
+.footer__col:first-child .footer__desc {
+  margin-bottom: 24px;
+}
+
+// Cột 2,3,4: Tiêu đề cách nội dung 24px, các hàng nội dung cách nhau 16px
+.footer__col:nth-child(2) .footer__title,
+.footer__col:nth-child(3) .footer__title,
+.footer__col:nth-child(4) .footer__title {
+  margin-bottom: 24px;
+}
+.footer__col:nth-child(2) .footer__desc,
+.footer__col:nth-child(3) .footer__desc,
+.footer__col:nth-child(4) .footer__desc {
+  margin-bottom: 16px;
+  line-height: 28px;
+}
+.footer__col:nth-child(2) .footer__desc:last-child,
+.footer__col:nth-child(3) .footer__desc:last-child,
+.footer__col:nth-child(4) .footer__desc:last-child {
+  margin-bottom: 0;
+}
+
+// Responsive
+@include respond-to(tablet) {
+  .footer .container {
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    text-align: center;
+  }
+  .footer__col {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100%;
+    margin-bottom: 32px;
+    flex: 1 1 100%;
+  }
+  .footer__logo,
+  .footer__title,
+  .footer__desc,
+  .footer__desc-small {
+    text-align: center;
+  }
+  .footer__form {
+    max-width: 100%;
+    width: 45%;
+    margin: 0 auto 16px auto;
+  }
+  .footer__col:last-child > div {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 auto 8px auto !important;
+    width: auto !important;
+  }
+  .footer__socials {
+    justify-content: center;
+  }
+}
+
+@include respond-to(desktop) {
+  .footer .container {
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+  }
+} 

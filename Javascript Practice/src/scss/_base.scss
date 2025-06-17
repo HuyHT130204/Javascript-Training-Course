@@ -1,0 +1,77 @@
+// Reset
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// Base styles
+html {
+  font-size: $font-size-base;
+  font-family: $font-family-base;
+  line-height: $line-height-base;
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  color: $dark-color;
+  background-color: $light-color;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: $spacing-md;
+}
+
+p {
+  margin-bottom: $spacing-md;
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+  transition: $transition-base;
+  
+  &:hover {
+    color: darken($primary-color, 10%);
+  }
+}
+
+// Lists
+ul, ol {
+  list-style: none;
+  margin-bottom: $spacing-md;
+}
+
+// Images
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+// Forms
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+// Container
+.container {
+  @include container;
+} 
