@@ -1,0 +1,168 @@
+@include header-desktop; 
+@include header-tablet;
+
+.header-top {
+  background: $header-top-bg;
+  color: $header-top-text;
+  font-family: $font-family-base;
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 400;
+  width: 100%;
+  min-height: 48px;
+  @include flex(row, center, center);
+  position: relative;
+  .header-top__content {
+    width: 100%;
+    max-width: $container-max-width;
+    margin: 0 auto;
+    @include flex(row, center, center);
+    padding: 0 24px;
+    position: relative;
+  }
+  .header-top__promo {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
+    @include flex(row, center, center);
+    pointer-events: none;
+    span, .shop-now {
+      pointer-events: auto;
+    }
+    span {
+      font-family: $font-family-base;
+      font-size: 14px;
+      font-weight: 400;
+      color: $header-top-text;
+    }
+    .shop-now {
+      font-weight: 600;
+      text-decoration: underline;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+  }
+  .header-top__lang {
+    position: absolute;
+    right: 24px;
+    font-family: $font-family-base;
+    font-size: 14px;
+    color: $header-top-lang;
+    @include flex(row, flex-start, center);
+    cursor: pointer;
+    svg {
+      margin-left: 4px;
+    }
+  }
+}
+
+.header-main {
+  width: 100%;
+  background: $header-main-bg;
+  border-bottom: 1px solid $header-main-border;
+  padding-top: 30px;
+  .header-main__container {
+    max-width: $container-max-width;
+    margin: 0 auto;
+    @include flex(row, space-between, center);
+    height: 64px;
+    padding: 0 24px;
+  }
+  .header-logo {
+    font-family: $font-family-logo;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: $header-logo-color;
+    margin-right: 140px;
+  }
+  .header-nav {
+    @include flex(row, flex-start, center);
+    gap: 48px;
+    a {
+      font-family: $font-family-base;
+      font-size: 16px;
+      font-weight: 400;
+      color: $header-nav-color;
+      text-decoration: none;
+      @include transition(color);
+      position: relative;
+      padding-bottom: 1px;
+      &.active {
+        border-bottom: 1px solid $header-nav-color;
+        @include transition(border-color);
+      }
+      &:hover {
+        color: $header-nav-hover;
+      }
+    }
+  }
+  .header-search {
+    @include flex(row, flex-start, center);
+    background: $header-search-bg;
+    border: 1px solid $header-search-border;
+    border-radius: $border-radius;
+    width: 243px;
+    height: 38px;
+    margin-left: 110px;
+    padding: 0;
+    input {
+      width: 211px;
+      height: 24px;
+      border: none;
+      background: transparent;
+      font-family: $font-family-base;
+      font-size: 12px;
+      font-weight: 400;
+      color: $header-search-text;
+      opacity: 0.5;
+      outline: none;
+      line-height: 18px;
+      padding: 0 0 0 16px;
+      box-sizing: border-box;
+      &::placeholder {
+        color: $header-search-placeholder;
+        opacity: 0.5;
+        font-size: 12px;
+        font-family: $font-family-base;
+        font-weight: 400;
+      }
+    }
+    button {
+      width: 38px;
+      height: 38px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      @include flex(row, center, center);
+      padding: 0;
+      margin-left: auto;
+      svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+      }
+    }
+  }
+  .header-icons {
+    @include flex(row, flex-start, center);
+    gap: 16px;
+    margin-left: 0;
+    a {
+      color: $header-nav-color;
+      @include flex(row, center, center);
+      font-size: 20px;
+      text-decoration: none;
+      @include transition(color);
+      &:hover {
+        color: $header-nav-hover;
+      }
+    }
+    a[href="/cart"] svg {
+      width: 24px !important;
+      height: 24px !important;
+    }
+  }
+}

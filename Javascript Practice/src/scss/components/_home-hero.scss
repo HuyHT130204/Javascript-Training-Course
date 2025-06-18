@@ -1,0 +1,320 @@
+// Hero Banner & Sidebar - Corrected Layout
+.home-hero {
+  display: flex;
+  max-width: $container-max-width;
+  margin: 0 auto;
+  height: $hero-banner-height;
+  padding: 40px 20px;
+  width: 100%;
+  position: relative;
+  margin-bottom: 100px;
+  
+  // Thanh ngăn kéo dài toàn bộ chiều cao
+  &::before {
+    content: '';
+    position: absolute;
+    left: 237px;
+    top: 0;
+    bottom: 0;
+    width: 0.5px;
+    background: rgba(33, 33, 33, 0.3);
+    z-index: 1;
+    height: 384px;
+  }
+  
+  &__sidebar {
+    width: $sidebar-width;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: transparent;
+    padding: 0;
+    padding-right: $sidebar-gap;
+    margin-right: 29px;
+    flex-shrink: 0;
+    
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: $sidebar-width;
+
+      li {
+        font-family: $font-poppins;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        margin-bottom: 16px;
+        color: $color-black;
+        padding: 0;
+        
+        .arrow {
+          display: flex;
+          align-items: center;
+          margin-left: auto;
+          color: $color-black;
+          margin-right: 24px;
+          svg {
+            width: 7.78px;
+            height: 12.73px;
+            display: block;
+          }
+        }
+        
+        // Chỉ 2 item đầu có arrow
+        &:nth-child(1),
+        &:nth-child(2) {
+          .arrow {
+            display: flex;
+          }
+        }
+        
+        &:nth-child(n+3) {
+          .arrow {
+            display: none;
+          }
+        }
+        
+        &:hover {
+          color: $color-secondary2;
+        }
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  &__banner {
+    width: 882px;
+    height: $hero-banner-height;
+    background: $color-black;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0 64px;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    
+    .banner-content {
+      flex: 1;
+      color: $color-white;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      max-width: 300px;
+      
+      .banner-header {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 20px;
+        
+        .banner-logo {
+          width: 40px;
+          height: 49px;
+          margin: 0;
+        }
+        
+        .banner-series {
+          font-family: $font-poppins;
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 24px;
+          margin: 0;
+          color: $color-text;
+        }
+      }
+      
+      .banner-title {
+        font-family: $font-inter;
+        font-size: 48px;
+        font-weight: 600;
+        line-height: 60px;
+        letter-spacing: 0.04em;
+        margin-bottom: 32px;
+        color: $color-text;
+        max-width: 300px;
+      }
+      
+      .banner-cta {
+        font-family: $font-poppins;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        margin-bottom: 0;
+        background: none;
+        border: none;
+        color: $color-text;
+        padding: 0;
+        
+        .underline {
+          text-decoration: underline;
+          text-underline-offset: 8px;
+          text-decoration-thickness: 1px;
+        }
+        
+        .arrow {
+          font-size: 16px;
+          text-decoration: none;
+          margin-left: 4px;
+          margin-top: 10px;
+        }
+      }
+    }
+    
+    .banner-image-wrap {
+      position: absolute;
+      right: -20px;
+      top: 55%;
+      transform: translateY(-50%);
+      width: 496px;
+      height: 352px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+      pointer-events: none;
+      
+      .banner-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+    }
+    
+    .banner-dots {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 12px;
+      display: flex;
+      gap: 12px;
+      z-index: 3;
+      
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        
+        &.active {
+          background: $dot-active;
+          border: 2px solid $color-white;
+        }
+      }
+    }
+  }
+}
+
+// Container wrapper để đảm bảo layout chính xác
+.main-content {
+  max-width: $container-max-width;
+  margin: 0 auto;
+  padding: 0 20px; // Padding để căn chỉnh với header
+}
+
+@include respond-to(tablet) {
+  .home-hero {
+    flex-direction: column;
+    height: auto;
+    padding: 20px 20px;
+    &::before {
+      display: none;
+    }
+    &__sidebar {
+      width: 100%;
+      height: auto;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+      padding-bottom: 20px;
+      margin-right: 0;
+      margin-bottom: 20px;
+      ul {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 16px 32px;
+        li {
+          margin-bottom: 0;
+          .arrow {
+            display: none !important;
+          }
+        }
+      }
+    }
+    &__banner {
+      width: 100%;
+      height: 300px;
+      padding: 0 24px;
+      .banner-content {
+        max-width: 100%;
+        .banner-title {
+          font-size: 32px;
+          line-height: 40px;
+          max-width: none;
+        }
+      }
+      .banner-image-wrap {
+        width: 300px;
+        height: 250px;
+        right: 24px;
+      }
+    }
+  }
+  .main-content {
+    padding: 0 20px;
+  }
+  .home-hero .home-hero__sidebar {
+    width: 100% !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+  .home-hero .home-hero__sidebar ul {
+    width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .home-hero .home-hero__sidebar ul li {
+    margin-bottom: 16px;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    box-sizing: border-box;
+    padding: 0 0 0 0;
+  }
+  .home-hero .home-hero__sidebar ul li:nth-child(-n+5) {
+    width: 20% !important;
+  }
+  .home-hero .home-hero__sidebar ul li:nth-child(n+6) {
+    width: 25% !important;
+    margin-bottom: 0;
+  }
+  .home-hero .home-hero__sidebar ul {
+    justify-content: center !important;
+  }
+  .home-hero .home-hero__sidebar ul li {
+    text-align: center;
+    justify-content: center;
+  }
+}
